@@ -34,6 +34,43 @@
             padding: 20px;
         }
 
+        /* ===== LANGUAGE SWITCHER ===== */
+        .lang-switcher {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(13, 13, 13, 0.92);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 42, 42, 0.2);
+            padding: 10px 20px;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 6px 12px;
+        }
+        .lang-switcher span {
+            cursor: pointer;
+            font-size: 0.95rem;
+            padding: 4px 12px;
+            border-radius: 30px;
+            transition: 0.3s;
+            color: #aa8888;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+        .lang-switcher span:hover {
+            background: rgba(255, 42, 42, 0.15);
+            color: #fff;
+        }
+        .lang-switcher span.active {
+            background: #ff2a2a;
+            color: #fff;
+            box-shadow: 0 0 20px rgba(255, 42, 42, 0.3);
+        }
+        .lang-switcher .flag {
+            margin-right: 4px;
+        }
+
         /* ===== HERO CON CANVAS ===== */
         .hero {
             position: relative;
@@ -59,6 +96,23 @@
         .hero-content {
             position: relative;
             z-index: 2;
+        }
+
+        /* ===== LOGO ===== */
+        .logo {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #ff2a2a;
+            box-shadow: 0 0 40px rgba(255, 42, 42, 0.25);
+            margin: 0 auto 18px;
+            display: block;
+            background: #0d0d0d;
+            transition: transform 0.3s;
+        }
+        .logo:hover {
+            transform: scale(1.05);
         }
 
         .hero h1 {
@@ -359,6 +413,10 @@
             .features-grid {
                 grid-template-columns: 1fr 1fr;
             }
+            .logo {
+                width: 70px;
+                height: 70px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -371,99 +429,117 @@
             .download-box h2 {
                 font-size: 1.6em;
             }
+            .logo {
+                width: 60px;
+                height: 60px;
+            }
         }
     </style>
 </head>
 <body>
 
+    <!-- ===== LANGUAGE SWITCHER ===== -->
+    <div class="lang-switcher" id="languageSwitcher">
+        <span data-lang="es" class="active"><span class="flag">🇪🇸</span> ES</span>
+        <span data-lang="en"><span class="flag">🇬🇧</span> EN</span>
+        <span data-lang="fr"><span class="flag">🇫🇷</span> FR</span>
+        <span data-lang="it"><span class="flag">🇮🇹</span> IT</span>
+        <span data-lang="zh"><span class="flag">🇨🇳</span> 中文</span>
+        <span data-lang="ru"><span class="flag">🇷🇺</span> RU</span>
+        <span data-lang="de"><span class="flag">🇩🇪</span> DE</span>
+        <span data-lang="pt"><span class="flag">🇧🇷</span> PT</span>
+    </div>
+
     <!-- ====== HERO CON ANIMACIÓN DE COCHES ====== -->
     <section class="hero">
         <canvas id="hwCanvas"></canvas>
         <div class="hero-content container">
-            <h1>🚗 Hw Scanner</h1>
-            <p class="subtitle">Descubre el valor real de tus Hot Wheels</p>
-            <div class="tagline">📸 Foto → 💰 Precio en segundos</div>
+            <!-- LOGO REAL: hotwheels_scanner.png -->
+            <img src="hotwheels_scanner.png" alt="Hw Scanner Logo" class="logo" />
+            <h1 data-i18n="title">🚗 Hw Scanner</h1>
+            <p class="subtitle" data-i18n="subtitle">Descubre el valor real de tus Hot Wheels</p>
+            <div class="tagline" data-i18n="tagline">📸 Foto → 💰 Precio en segundos</div>
             <br />
-            <button class="scan-btn" id="scanBtn">🔍 Escanear coche</button>
+            <button class="scan-btn" id="scanBtn" data-i18n="scan_btn">🔍 Escanear coche</button>
         </div>
     </section>
 
     <div class="container">
 
         <!-- ====== ¿QUÉ HACE? ====== -->
-        <h2 class="section-title">🔍 ¿Qué hace esta app?</h2>
+        <h2 class="section-title" data-i18n="what_title">🔍 ¿Qué hace esta app?</h2>
         <div class="desc-box">
             <ul>
-                <li>📸 Escanea cualquier Hot Wheels con la cámara</li>
-                <li>🤖 Detecta el modelo automáticamente</li>
-                <li>💰 Muestra el precio mínimo real de mercado</li>
-                <li>📊 Te da una estimación basada en ventas reales</li>
-                <li>🛒 Ideal para comprar, vender o coleccionar</li>
+                <li data-i18n="li1">📸 Escanea cualquier Hot Wheels con la cámara</li>
+                <li data-i18n="li2">🤖 Detecta el modelo automáticamente</li>
+                <li data-i18n="li3">💰 Muestra el precio mínimo real de mercado</li>
+                <li data-i18n="li4">📊 Te da una estimación basada en ventas reales</li>
+                <li data-i18n="li5">🛒 Ideal para comprar, vender o coleccionar</li>
             </ul>
         </div>
 
         <!-- ====== IDEAL PARA ====== -->
         <div class="ideal-box">
-            <span><strong>✅</strong> Coleccionistas</span>
-            <span><strong>✅</strong> Compradores en tiendas o mercadillos</span>
-            <span><strong>✅</strong> Vendedores online</span>
-            <span><strong>✅</strong> Personas que quieren saber si tienen una pieza valiosa</span>
+            <span data-i18n="ideal1"><strong>✅</strong> Coleccionistas</span>
+            <span data-i18n="ideal2"><strong>✅</strong> Compradores en tiendas o mercadillos</span>
+            <span data-i18n="ideal3"><strong>✅</strong> Vendedores online</span>
+            <span data-i18n="ideal4"><strong>✅</strong> Personas que quieren saber si tienen una pieza valiosa</span>
         </div>
 
         <!-- ====== FUNCIONES PRINCIPALES ====== -->
-        <h2 class="section-title">⚡ Funciones principales</h2>
+        <h2 class="section-title" data-i18n="features_title">⚡ Funciones principales</h2>
         <div class="features-grid">
             <div class="feature-card">
                 <span class="icon">📸</span>
-                <h3>Escaneo rápido</h3>
-                <p>Usa la cámara para escanear el coche al instante.</p>
+                <h3 data-i18n="f1_title">Escaneo rápido</h3>
+                <p data-i18n="f1_desc">Usa la cámara para escanear el coche al instante.</p>
             </div>
             <div class="feature-card">
                 <span class="icon">⚡</span>
-                <h3>Resultados en segundos</h3>
-                <p>Obtén el precio mínimo y medio sin esperas.</p>
+                <h3 data-i18n="f2_title">Resultados en segundos</h3>
+                <p data-i18n="f2_desc">Obtén el precio mínimo y medio sin esperas.</p>
             </div>
             <div class="feature-card">
                 <span class="icon">💰</span>
-                <h3>Estimación de valor</h3>
-                <p>Precio mínimo y medio basado en ventas reales.</p>
+                <h3 data-i18n="f3_title">Estimación de valor</h3>
+                <p data-i18n="f3_desc">Precio mínimo y medio basado en ventas reales.</p>
             </div>
             <div class="feature-card">
                 <span class="icon">🎨</span>
-                <h3>Interfaz simple</h3>
-                <p>Diseñada para ser fácil y rápida de usar.</p>
+                <h3 data-i18n="f4_title">Interfaz simple</h3>
+                <p data-i18n="f4_desc">Diseñada para ser fácil y rápida de usar.</p>
             </div>
         </div>
 
         <!-- ====== POR QUÉ USARLA ====== -->
-        <h2 class="section-title">💡 ¿Por qué usarla?</h2>
+        <h2 class="section-title" data-i18n="why_title">💡 ¿Por qué usarla?</h2>
         <div style="background:#141010; padding:25px 30px; border-radius:16px; border:1px solid #2a1a1a; margin-bottom:30px;">
-            <p style="color:#cccccc; font-size:1.05rem; margin-bottom:15px;">
+            <p style="color:#cccccc; font-size:1.05rem; margin-bottom:15px;" data-i18n="why_p1">
                 Muchos Hot Wheels parecen iguales… pero algunos pueden valer <strong style="color:#ff2a2a;">mucho más de lo que imaginas</strong>.
             </p>
-            <p style="color:#cccccc; font-size:1.05rem;">
+            <p style="color:#cccccc; font-size:1.05rem;" data-i18n="why_p2">
                 Con esta app evitarás:
             </p>
             <ul style="list-style:none; display:flex; flex-wrap:wrap; gap:12px; margin-top:12px; padding:0;">
-                <li style="background:#1a1010; padding:8px 20px; border-radius:30px; border-left:3px solid #ff2a2a; color:#dddddd;">❌ pagar de más</li>
-                <li style="background:#1a1010; padding:8px 20px; border-radius:30px; border-left:3px solid #ff2a2a; color:#dddddd;">❌ vender barato</li>
-                <li style="background:#1a1010; padding:8px 20px; border-radius:30px; border-left:3px solid #ff2a2a; color:#dddddd;">❌ perder oportunidades</li>
+                <li style="background:#1a1010; padding:8px 20px; border-radius:30px; border-left:3px solid #ff2a2a; color:#dddddd;" data-i18n="why_li1">❌ pagar de más</li>
+                <li style="background:#1a1010; padding:8px 20px; border-radius:30px; border-left:3px solid #ff2a2a; color:#dddddd;" data-i18n="why_li2">❌ vender barato</li>
+                <li style="background:#1a1010; padding:8px 20px; border-radius:30px; border-left:3px solid #ff2a2a; color:#dddddd;" data-i18n="why_li3">❌ perder oportunidades</li>
             </ul>
         </div>
 
         <!-- ====== DESCARGA ====== -->
         <div class="download-box">
-            <h2>🚀 Descarga Hw Scanner</h2>
-            <p>Totalmente gratuita · Descubre el valor real de tu colección</p>
-            <a href="https://play.google.com/store/apps/details?id=vargas.maximo.hotwheelsscanner" target="_blank">Ir a Google Play</a>
+            <h2 data-i18n="download_title">🚀 Descarga Hw Scanner</h2>
+            <p data-i18n="download_sub">Totalmente gratuita · Descubre el valor real de tu colección</p>
+            <a href="https://play.google.com/store/apps/details?id=vargas.maximo.hotwheelsscanner" target="_blank" data-i18n="download_btn">Ir a Google Play</a>
         </div>
 
         <!-- ====== CITA ====== -->
         <div class="quote-box">
-            <p>
+            <p data-i18n="quote_text">
                 "Descubre el valor real de tu colección y convierte cada coche en una oportunidad."
             </p>
-            <p class="author">— Hw Scanner Team</p>
+            <p class="author" data-i18n="quote_author">— Hw Scanner Team</p>
         </div>
 
     </div>
@@ -471,17 +547,373 @@
     <!-- ====== FOOTER ====== -->
     <footer>
         <div class="container">
-            <p>© 2026 <strong style="color:#ff2a2a;">Hw Scanner</strong> · Hot Wheels Scanner</p>
-            <p style="margin-top:8px; font-size:0.9rem;">
+            <p data-i18n="footer_copy">© 2026 <strong style="color:#ff2a2a;">Hw Scanner</strong> · Hot Wheels Scanner</p>
+            <p style="margin-top:8px; font-size:0.9rem;" data-i18n="footer_made">
                 Hecho con ❤️ por <a href="https://MaxStudiotoken.github.io/maxstudio/">MaxStudio</a>
             </p>
         </div>
     </footer>
 
     <!-- ============================================================ -->
-    <!-- ====== JAVASCRIPT: ANIMACIÓN DE COCHES MOVIÉNDOSE ====== -->
+    <!-- ====== JAVASCRIPT: ANIMACIÓN DE COCHES + IDIOMAS ====== -->
     <!-- ============================================================ -->
     <script>
+        // ==================== TRADUCCIONES ====================
+        const translations = {
+            es: {
+                title: "🚗 Hw Scanner",
+                subtitle: "Descubre el valor real de tus Hot Wheels",
+                tagline: "📸 Foto → 💰 Precio en segundos",
+                scan_btn: "🔍 Escanear coche",
+                scan_btn_stop: "⏹️ Detener escaneo",
+                what_title: "🔍 ¿Qué hace esta app?",
+                li1: "📸 Escanea cualquier Hot Wheels con la cámara",
+                li2: "🤖 Detecta el modelo automáticamente",
+                li3: "💰 Muestra el precio mínimo real de mercado",
+                li4: "📊 Te da una estimación basada en ventas reales",
+                li5: "🛒 Ideal para comprar, vender o coleccionar",
+                ideal1: "✅ Coleccionistas",
+                ideal2: "✅ Compradores en tiendas o mercadillos",
+                ideal3: "✅ Vendedores online",
+                ideal4: "✅ Personas que quieren saber si tienen una pieza valiosa",
+                features_title: "⚡ Funciones principales",
+                f1_title: "Escaneo rápido",
+                f1_desc: "Usa la cámara para escanear el coche al instante.",
+                f2_title: "Resultados en segundos",
+                f2_desc: "Obtén el precio mínimo y medio sin esperas.",
+                f3_title: "Estimación de valor",
+                f3_desc: "Precio mínimo y medio basado en ventas reales.",
+                f4_title: "Interfaz simple",
+                f4_desc: "Diseñada para ser fácil y rápida de usar.",
+                why_title: "💡 ¿Por qué usarla?",
+                why_p1: "Muchos Hot Wheels parecen iguales… pero algunos pueden valer <strong style='color:#ff2a2a;'>mucho más de lo que imaginas</strong>.",
+                why_p2: "Con esta app evitarás:",
+                why_li1: "❌ pagar de más",
+                why_li2: "❌ vender barato",
+                why_li3: "❌ perder oportunidades",
+                download_title: "🚀 Descarga Hw Scanner",
+                download_sub: "Totalmente gratuita · Descubre el valor real de tu colección",
+                download_btn: "Ir a Google Play",
+                quote_text: '"Descubre el valor real de tu colección y convierte cada coche en una oportunidad."',
+                quote_author: "— Hw Scanner Team",
+                footer_copy: "© 2026 <strong style='color:#ff2a2a;'>Hw Scanner</strong> · Hot Wheels Scanner",
+                footer_made: "Hecho con ❤️ por <a href='https://MaxStudiotoken.github.io/maxstudio/'>MaxStudio</a>"
+            },
+            en: {
+                title: "🚗 Hw Scanner",
+                subtitle: "Discover the real value of your Hot Wheels",
+                tagline: "📸 Photo → 💰 Price in seconds",
+                scan_btn: "🔍 Scan car",
+                scan_btn_stop: "⏹️ Stop scanning",
+                what_title: "🔍 What does this app do?",
+                li1: "📸 Scan any Hot Wheels with the camera",
+                li2: "🤖 Automatically detects the model",
+                li3: "💰 Shows the real minimum market price",
+                li4: "📊 Gives an estimate based on real sales",
+                li5: "🛒 Ideal for buying, selling or collecting",
+                ideal1: "✅ Collectors",
+                ideal2: "✅ Shoppers at stores or flea markets",
+                ideal3: "✅ Online sellers",
+                ideal4: "✅ People who want to know if they have a valuable piece",
+                features_title: "⚡ Main features",
+                f1_title: "Fast scanning",
+                f1_desc: "Use the camera to scan the car instantly.",
+                f2_title: "Results in seconds",
+                f2_desc: "Get the minimum and average price without waiting.",
+                f3_title: "Value estimation",
+                f3_desc: "Minimum and average price based on real sales.",
+                f4_title: "Simple interface",
+                f4_desc: "Designed to be easy and quick to use.",
+                why_title: "💡 Why use it?",
+                why_p1: "Many Hot Wheels look the same… but some can be worth <strong style='color:#ff2a2a;'>much more than you imagine</strong>.",
+                why_p2: "With this app you'll avoid:",
+                why_li1: "❌ overpaying",
+                why_li2: "❌ selling cheap",
+                why_li3: "❌ missing opportunities",
+                download_title: "🚀 Download Hw Scanner",
+                download_sub: "Completely free · Discover the real value of your collection",
+                download_btn: "Go to Google Play",
+                quote_text: '"Discover the real value of your collection and turn every car into an opportunity."',
+                quote_author: "— Hw Scanner Team",
+                footer_copy: "© 2026 <strong style='color:#ff2a2a;'>Hw Scanner</strong> · Hot Wheels Scanner",
+                footer_made: "Made with ❤️ by <a href='https://MaxStudiotoken.github.io/maxstudio/'>MaxStudio</a>"
+            },
+            fr: {
+                title: "🚗 Hw Scanner",
+                subtitle: "Découvrez la vraie valeur de vos Hot Wheels",
+                tagline: "📸 Photo → 💰 Prix en quelques secondes",
+                scan_btn: "🔍 Scanner la voiture",
+                scan_btn_stop: "⏹️ Arrêter le scan",
+                what_title: "🔍 Que fait cette app ?",
+                li1: "📸 Scannez n'importe quel Hot Wheels avec la caméra",
+                li2: "🤖 Détecte automatiquement le modèle",
+                li3: "💰 Affiche le prix minimum réel du marché",
+                li4: "📊 Donne une estimation basée sur les ventes réelles",
+                li5: "🛒 Idéal pour acheter, vendre ou collectionner",
+                ideal1: "✅ Collectionneurs",
+                ideal2: "✅ Acheteurs en magasin ou brocante",
+                ideal3: "✅ Vendeurs en ligne",
+                ideal4: "✅ Personnes qui veulent savoir si elles ont une pièce de valeur",
+                features_title: "⚡ Fonctionnalités principales",
+                f1_title: "Scan rapide",
+                f1_desc: "Utilisez l'appareil photo pour scanner la voiture instantanément.",
+                f2_title: "Résultats en quelques secondes",
+                f2_desc: "Obtenez le prix minimum et moyen sans attendre.",
+                f3_title: "Estimation de la valeur",
+                f3_desc: "Prix minimum et moyen basés sur des ventes réelles.",
+                f4_title: "Interface simple",
+                f4_desc: "Conçue pour être facile et rapide à utiliser.",
+                why_title: "💡 Pourquoi l'utiliser ?",
+                why_p1: "Beaucoup de Hot Wheels se ressemblent… mais certains peuvent valoir <strong style='color:#ff2a2a;'>bien plus que ce que vous imaginez</strong>.",
+                why_p2: "Avec cette app, vous éviterez :",
+                why_li1: "❌ de payer trop cher",
+                why_li2: "❌ de vendre à perte",
+                why_li3: "❌ de rater des opportunités",
+                download_title: "🚀 Télécharger Hw Scanner",
+                download_sub: "Entièrement gratuit · Découvrez la vraie valeur de votre collection",
+                download_btn: "Aller sur Google Play",
+                quote_text: '"Découvrez la vraie valeur de votre collection et faites de chaque voiture une opportunité."',
+                quote_author: "— Équipe Hw Scanner",
+                footer_copy: "© 2026 <strong style='color:#ff2a2a;'>Hw Scanner</strong> · Hot Wheels Scanner",
+                footer_made: "Fait avec ❤️ par <a href='https://MaxStudiotoken.github.io/maxstudio/'>MaxStudio</a>"
+            },
+            it: {
+                title: "🚗 Hw Scanner",
+                subtitle: "Scopri il vero valore dei tuoi Hot Wheels",
+                tagline: "📸 Foto → 💰 Prezzo in pochi secondi",
+                scan_btn: "🔍 Scansiona auto",
+                scan_btn_stop: "⏹️ Ferma scansione",
+                what_title: "🔍 Cosa fa quest'app?",
+                li1: "📸 Scansiona qualsiasi Hot Wheels con la fotocamera",
+                li2: "🤖 Rileva automaticamente il modello",
+                li3: "💰 Mostra il prezzo minimo reale di mercato",
+                li4: "📊 Dà una stima basata su vendite reali",
+                li5: "🛒 Ideale per acquistare, vendere o collezionare",
+                ideal1: "✅ Collezionisti",
+                ideal2: "✅ Acquirenti in negozi o mercatini",
+                ideal3: "✅ Venditori online",
+                ideal4: "✅ Persone che vogliono sapere se hanno un pezzo di valore",
+                features_title: "⚡ Funzionalità principali",
+                f1_title: "Scansione rapida",
+                f1_desc: "Usa la fotocamera per scansionare l'auto all'istante.",
+                f2_title: "Risultati in pochi secondi",
+                f2_desc: "Ottieni il prezzo minimo e medio senza attendere.",
+                f3_title: "Stima del valore",
+                f3_desc: "Prezzo minimo e medio basato su vendite reali.",
+                f4_title: "Interfaccia semplice",
+                f4_desc: "Progettata per essere facile e veloce da usare.",
+                why_title: "💡 Perché usarla?",
+                why_p1: "Molti Hot Wheels sembrano uguali… ma alcuni possono valere <strong style='color:#ff2a2a;'>molto più di quanto immagini</strong>.",
+                why_p2: "Con quest'app eviterai:",
+                why_li1: "❌ di pagare troppo",
+                why_li2: "❌ di vendere a poco",
+                why_li3: "❌ di perdere opportunità",
+                download_title: "🚀 Scarica Hw Scanner",
+                download_sub: "Completamente gratuito · Scopri il vero valore della tua collezione",
+                download_btn: "Vai su Google Play",
+                quote_text: '"Scopri il vero valore della tua collezione e trasforma ogni auto in un\'opportunità."',
+                quote_author: "— Team Hw Scanner",
+                footer_copy: "© 2026 <strong style='color:#ff2a2a;'>Hw Scanner</strong> · Hot Wheels Scanner",
+                footer_made: "Fatto con ❤️ da <a href='https://MaxStudiotoken.github.io/maxstudio/'>MaxStudio</a>"
+            },
+            zh: {
+                title: "🚗 Hw Scanner",
+                subtitle: "发现您 Hot Wheels 的真实价值",
+                tagline: "📸 照片 → 💰 几秒钟内显示价格",
+                scan_btn: "🔍 扫描汽车",
+                scan_btn_stop: "⏹️ 停止扫描",
+                what_title: "🔍 这个应用做什么？",
+                li1: "📸 用相机扫描任何 Hot Wheels",
+                li2: "🤖 自动检测车型",
+                li3: "💰 显示真实的最低市场价格",
+                li4: "📊 基于实际销售提供估价",
+                li5: "🛒 非常适合购买、出售或收藏",
+                ideal1: "✅ 收藏家",
+                ideal2: "✅ 商店或跳蚤市场的买家",
+                ideal3: "✅ 在线卖家",
+                ideal4: "✅ 想知道自己是否有珍贵藏品的人",
+                features_title: "⚡ 主要功能",
+                f1_title: "快速扫描",
+                f1_desc: "使用相机即时扫描汽车。",
+                f2_title: "几秒钟出结果",
+                f2_desc: "无需等待即可获得最低和平均价格。",
+                f3_title: "价值估算",
+                f3_desc: "基于实际销售的最低和平均价格。",
+                f4_title: "简单界面",
+                f4_desc: "设计易于快速使用。",
+                why_title: "💡 为什么使用它？",
+                why_p1: "许多 Hot Wheels 看起来都一样……但有些可能值 <strong style='color:#ff2a2a;'>远超您的想象</strong>。",
+                why_p2: "使用这个应用，您可以避免：",
+                why_li1: "❌ 多付钱",
+                why_li2: "❌ 低价出售",
+                why_li3: "❌ 错失机会",
+                download_title: "🚀 下载 Hw Scanner",
+                download_sub: "完全免费 · 发现您收藏的真实价值",
+                download_btn: "前往 Google Play",
+                quote_text: '"发现您收藏的真实价值，让每一辆车都成为机会。"',
+                quote_author: "— Hw Scanner 团队",
+                footer_copy: "© 2026 <strong style='color:#ff2a2a;'>Hw Scanner</strong> · Hot Wheels 扫描器",
+                footer_made: "用心制作 ❤️ 来自 <a href='https://MaxStudiotoken.github.io/maxstudio/'>MaxStudio</a>"
+            },
+            ru: {
+                title: "🚗 Hw Scanner",
+                subtitle: "Узнайте реальную стоимость ваших Hot Wheels",
+                tagline: "📸 Фото → 💰 Цена за секунды",
+                scan_btn: "🔍 Сканировать машину",
+                scan_btn_stop: "⏹️ Остановить сканирование",
+                what_title: "🔍 Что делает это приложение?",
+                li1: "📸 Сканируйте любые Hot Wheels с помощью камеры",
+                li2: "🤖 Автоматически определяет модель",
+                li3: "💰 Показывает реальную минимальную рыночную цену",
+                li4: "📊 Даёт оценку на основе реальных продаж",
+                li5: "🛒 Идеально для покупки, продажи или коллекционирования",
+                ideal1: "✅ Коллекционеры",
+                ideal2: "✅ Покупатели в магазинах или на блошиных рынках",
+                ideal3: "✅ Продавцы онлайн",
+                ideal4: "✅ Люди, которые хотят знать, есть ли у них ценная вещь",
+                features_title: "⚡ Основные функции",
+                f1_title: "Быстрое сканирование",
+                f1_desc: "Используйте камеру для мгновенного сканирования машины.",
+                f2_title: "Результаты за секунды",
+                f2_desc: "Получите минимальную и среднюю цену без ожидания.",
+                f3_title: "Оценка стоимости",
+                f3_desc: "Минимальная и средняя цена на основе реальных продаж.",
+                f4_title: "Простой интерфейс",
+                f4_desc: "Разработан для простоты и скорости использования.",
+                why_title: "💡 Почему использовать?",
+                why_p1: "Многие Hot Wheels выглядят одинаково… но некоторые могут стоить <strong style='color:#ff2a2a;'>гораздо больше, чем вы думаете</strong>.",
+                why_p2: "С этим приложением вы избежите:",
+                why_li1: "❌ переплаты",
+                why_li2: "❌ продажи по дешёвке",
+                why_li3: "❌ упущенных возможностей",
+                download_title: "🚀 Скачать Hw Scanner",
+                download_sub: "Полностью бесплатно · Узнайте реальную стоимость вашей коллекции",
+                download_btn: "Перейти в Google Play",
+                quote_text: '"Узнайте реальную стоимость вашей коллекции и превратите каждую машину в возможность."',
+                quote_author: "— Команда Hw Scanner",
+                footer_copy: "© 2026 <strong style='color:#ff2a2a;'>Hw Scanner</strong> · Сканер Hot Wheels",
+                footer_made: "Сделано с ❤️ от <a href='https://MaxStudiotoken.github.io/maxstudio/'>MaxStudio</a>"
+            },
+            de: {
+                title: "🚗 Hw Scanner",
+                subtitle: "Entdecken Sie den echten Wert Ihrer Hot Wheels",
+                tagline: "📸 Foto → 💰 Preis in Sekunden",
+                scan_btn: "🔍 Auto scannen",
+                scan_btn_stop: "⏹️ Scan stoppen",
+                what_title: "🔍 Was macht diese App?",
+                li1: "📸 Scannen Sie jedes Hot Wheels mit der Kamera",
+                li2: "🤖 Erkennt das Modell automatisch",
+                li3: "💰 Zeigt den echten Mindestmarktpreis an",
+                li4: "📊 Gibt eine Schätzung basierend auf echten Verkäufen",
+                li5: "🛒 Ideal zum Kaufen, Verkaufen oder Sammeln",
+                ideal1: "✅ Sammler",
+                ideal2: "✅ Käufer in Geschäften oder auf Flohmärkten",
+                ideal3: "✅ Online-Verkäufer",
+                ideal4: "✅ Personen, die wissen wollen, ob sie ein wertvolles Stück haben",
+                features_title: "⚡ Hauptfunktionen",
+                f1_title: "Schneller Scan",
+                f1_desc: "Nutzen Sie die Kamera, um das Auto sofort zu scannen.",
+                f2_title: "Ergebnisse in Sekunden",
+                f2_desc: "Erhalten Sie den Mindest- und Durchschnittspreis ohne Wartezeit.",
+                f3_title: "Wertschätzung",
+                f3_desc: "Mindest- und Durchschnittspreis basierend auf echten Verkäufen.",
+                f4_title: "Einfache Oberfläche",
+                f4_desc: "Entworfen für einfache und schnelle Bedienung.",
+                why_title: "💡 Warum verwenden?",
+                why_p1: "Viele Hot Wheels sehen gleich aus… aber einige können <strong style='color:#ff2a2a;'>viel mehr wert sein, als Sie denken</strong>.",
+                why_p2: "Mit dieser App vermeiden Sie:",
+                why_li1: "❌ zu viel zu bezahlen",
+                why_li2: "❌ billig zu verkaufen",
+                why_li3: "❌ Chancen zu verpassen",
+                download_title: "🚀 Hw Scanner herunterladen",
+                download_sub: "Völlig kostenlos · Entdecken Sie den echten Wert Ihrer Sammlung",
+                download_btn: "Zu Google Play",
+                quote_text: '"Entdecken Sie den echten Wert Ihrer Sammlung und machen Sie jedes Auto zu einer Gelegenheit."',
+                quote_author: "— Hw Scanner Team",
+                footer_copy: "© 2026 <strong style='color:#ff2a2a;'>Hw Scanner</strong> · Hot Wheels Scanner",
+                footer_made: "Mit ❤️ gemacht von <a href='https://MaxStudiotoken.github.io/maxstudio/'>MaxStudio</a>"
+            },
+            pt: {
+                title: "🚗 Hw Scanner",
+                subtitle: "Descubra o valor real dos seus Hot Wheels",
+                tagline: "📸 Foto → 💰 Preço em segundos",
+                scan_btn: "🔍 Escanear carro",
+                scan_btn_stop: "⏹️ Parar escaneamento",
+                what_title: "🔍 O que este app faz?",
+                li1: "📸 Escaneie qualquer Hot Wheels com a câmera",
+                li2: "🤖 Detecta o modelo automaticamente",
+                li3: "💰 Mostra o preço mínimo real de mercado",
+                li4: "📊 Dá uma estimativa baseada em vendas reais",
+                li5: "🛒 Ideal para comprar, vender ou colecionar",
+                ideal1: "✅ Colecionadores",
+                ideal2: "✅ Compradores em lojas ou feiras",
+                ideal3: "✅ Vendedores online",
+                ideal4: "✅ Pessoas que querem saber se têm uma peça valiosa",
+                features_title: "⚡ Funcionalidades principais",
+                f1_title: "Escaneamento rápido",
+                f1_desc: "Use a câmera para escanear o carro instantaneamente.",
+                f2_title: "Resultados em segundos",
+                f2_desc: "Obtenha o preço mínimo e médio sem esperar.",
+                f3_title: "Estimativa de valor",
+                f3_desc: "Preço mínimo e médio baseado em vendas reais.",
+                f4_title: "Interface simples",
+                f4_desc: "Projetada para ser fácil e rápida de usar.",
+                why_title: "💡 Por que usar?",
+                why_p1: "Muitos Hot Wheels parecem iguais… mas alguns podem valer <strong style='color:#ff2a2a;'>muito mais do que você imagina</strong>.",
+                why_p2: "Com este app você evitará:",
+                why_li1: "❌ pagar demais",
+                why_li2: "❌ vender barato",
+                why_li3: "❌ perder oportunidades",
+                download_title: "🚀 Baixar Hw Scanner",
+                download_sub: "Totalmente gratuito · Descubra o valor real da sua coleção",
+                download_btn: "Ir para o Google Play",
+                quote_text: '"Descubra o valor real da sua coleção e transforme cada carro em uma oportunidade."',
+                quote_author: "— Equipe Hw Scanner",
+                footer_copy: "© 2026 <strong style='color:#ff2a2a;'>Hw Scanner</strong> · Hot Wheels Scanner",
+                footer_made: "Feito com ❤️ por <a href='https://MaxStudiotoken.github.io/maxstudio/'>MaxStudio</a>"
+            }
+        };
+
+        // ==================== IDIOMA ====================
+        const langSwitcher = document.getElementById('languageSwitcher');
+        const allLangSpans = langSwitcher.querySelectorAll('span');
+        const i18nElements = document.querySelectorAll('[data-i18n]');
+
+        function setLanguage(lang) {
+            allLangSpans.forEach(span => {
+                span.classList.remove('active');
+                if (span.dataset.lang === lang) span.classList.add('active');
+            });
+            i18nElements.forEach(el => {
+                const key = el.dataset.i18n;
+                if (translations[lang] && translations[lang][key] !== undefined) {
+                    if (el.tagName === 'BUTTON' && key === 'scan_btn') {
+                        const btn = document.getElementById('scanBtn');
+                        if (!btn.classList.contains('scanning')) {
+                            el.innerHTML = translations[lang][key];
+                        }
+                    } else {
+                        el.innerHTML = translations[lang][key];
+                    }
+                }
+            });
+            document.documentElement.lang = lang;
+        }
+
+        allLangSpans.forEach(span => {
+            span.addEventListener('click', function() {
+                const lang = this.dataset.lang;
+                setLanguage(lang);
+                const btn = document.getElementById('scanBtn');
+                if (btn.classList.contains('scanning')) {
+                    btn.textContent = translations[lang].scan_btn_stop || '⏹️ Detener escaneo';
+                } else {
+                    btn.textContent = translations[lang].scan_btn || '🔍 Escanear coche';
+                }
+            });
+        });
+
+        // ==================== ANIMACIÓN DE COCHES ====================
         (function() {
             const canvas = document.getElementById('hwCanvas');
             const ctx = canvas.getContext('2d');
@@ -490,7 +922,6 @@
             let scanning = false;
             let frameId = null;
 
-            // Emojis de coches
             const carEmojis = ['🚗', '🚙', '🚕', '🏎️', '🚓', '🚑', '🚒', '🚐', '🛻', '🚘'];
 
             function resize() {
@@ -501,7 +932,6 @@
                 H = canvas.height;
             }
 
-            // Generar coche aleatorio
             function createCar() {
                 const size = 30 + Math.random() * 28;
                 return {
@@ -511,7 +941,6 @@
                     dx: (Math.random() - 0.5) * 2.5,
                     dy: (Math.random() - 0.5) * 2.5,
                     size: size,
-                    rotation: 0,
                 };
             }
 
@@ -525,17 +954,14 @@
             function drawCars() {
                 ctx.clearRect(0, 0, W, H);
 
-                // Dibujar cada coche
                 cars.forEach(car => {
                     const x = car.x;
                     const y = car.y;
                     const s = car.size;
 
-                    // Sombra
                     ctx.shadowColor = 'rgba(255, 42, 42, 0.2)';
                     ctx.shadowBlur = 15;
 
-                    // Efecto de brillo alrededor del coche (solo si está escaneando)
                     if (scanning) {
                         const grad = ctx.createRadialGradient(x, y, 0, x, y, s * 1.5);
                         grad.addColorStop(0, 'rgba(255, 200, 100, 0.15)');
@@ -547,15 +973,12 @@
                     }
 
                     ctx.shadowBlur = 0;
-
-                    // Dibujar el emoji del coche
                     ctx.font = `${s}px Arial`;
                     ctx.textAlign = 'center';
                     ctx.textBaseline = 'middle';
                     ctx.fillStyle = '#ffffff';
                     ctx.fillText(car.emoji, x, y);
 
-                    // Pequeño destello si está escaneando
                     if (scanning) {
                         ctx.font = '12px Arial';
                         ctx.fillStyle = 'rgba(255, 200, 100, 0.7)';
@@ -563,17 +986,13 @@
                     }
                 });
 
-                // Actualizar posiciones
                 cars.forEach(car => {
                     car.x += car.dx;
                     car.y += car.dy;
-
-                    // Rebote en bordes
                     if (car.x <= 0 || car.x >= W - car.size) car.dx *= -1;
                     if (car.y <= 0 || car.y >= H - car.size) car.dy *= -1;
                 });
 
-                // Si está escaneando, mostrar texto de "Escaneando..."
                 if (scanning) {
                     ctx.font = 'bold 22px Inter, Arial';
                     ctx.fillStyle = '#ffaa44';
@@ -586,22 +1005,20 @@
                 frameId = requestAnimationFrame(drawCars);
             }
 
-            // ====== ESCANEAR ======
             function toggleScan() {
                 scanning = !scanning;
                 const btn = document.getElementById('scanBtn');
+                const lang = document.documentElement.lang || 'es';
                 if (scanning) {
-                    btn.textContent = '⏹️ Detener escaneo';
+                    btn.textContent = translations[lang]?.scan_btn_stop || '⏹️ Detener escaneo';
                     btn.classList.add('scanning');
-                    // Hacer que los coches se muevan más rápido
                     cars.forEach(c => {
                         c.dx *= 1.2;
                         c.dy *= 1.2;
                     });
                 } else {
-                    btn.textContent = '🔍 Escanear coche';
+                    btn.textContent = translations[lang]?.scan_btn || '🔍 Escanear coche';
                     btn.classList.remove('scanning');
-                    // Volver a velocidad normal
                     cars.forEach(c => {
                         if (Math.abs(c.dx) > 2) c.dx *= 0.8;
                         if (Math.abs(c.dy) > 2) c.dy *= 0.8;
@@ -609,7 +1026,6 @@
                 }
             }
 
-            // ====== INICIALIZAR ======
             function init() {
                 resize();
                 initCars(10);
@@ -626,7 +1042,9 @@
                 init();
             }
         })();
-    </script>
 
+        // Idioma inicial
+        setLanguage('es');
+    </script>
 </body>
 </html>
