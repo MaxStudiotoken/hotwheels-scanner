@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HW Scanner | Escanea Hot Wheels y descubre su valor real</title>
+    <meta name="description" content="HW Scanner te permite escanear cualquier Hot Wheels con la cámara y obtener su precio mínimo de mercado en segundos. Ideal para coleccionistas." />
+    <meta name="keywords" content="Hot Wheels, escáner, valor, precio, coleccionismo, HW Scanner" />
+    <link rel="canonical" href="https://MaxStudiotoken.github.io/hw-scanner/" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
+
+    <style>
+        /* ===== RESET Y BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', Arial, sans-serif;
+            background: #0d0808;
+            color: #e8dcdc;
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* ===== HERO CON CANVAS ===== */
+        .hero {
+            position: relative;
+            background: linear-gradient(145deg, #1a0a0a 0%, #2d1515 50%, #0d0606 100%);
+            padding: 60px 20px 40px;
+            text-align: center;
+            border-bottom: 4px solid #ff6b00;
+            overflow: hidden;
+            min-height: 560px;
+        }
+
+        #hwCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 4.2em;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ff6b00, #ffaa00, #ff6b00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -1px;
+            margin-bottom: 10px;
+        }
+
+        .hero .subtitle {
+            font-size: 1.4em;
+            color: #eec0a0;
+            font-weight: 400;
+        }
+
+        .hero .tagline {
+            display: inline-block;
+            margin-top: 15px;
+            background: rgba(255, 107, 0, 0.15);
+            border: 1px solid #ff6b00;
+            color: #ffaa44;
+            padding: 8px 28px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.95em;
+            backdrop-filter: blur(4px);
+        }
+
+        .scan-btn {
+            position: relative;
+            z-index: 3;
+            margin-top: 30px;
+            background: #ff6b00;
+            border: none;
+            color: #fff;
+            padding: 16px 50px;
+            border-radius: 60px;
+            font-weight: 800;
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 0 40px rgba(255, 107, 0, 0.3);
+            border: 1px solid #ff8833;
+        }
+
+        .scan-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 70px rgba(255, 107, 0, 0.5);
+            background: #ff8833;
+        }
+
+        .scan-btn:active {
+            transform: scale(0.95);
+        }
+
+        .scan-btn.scanning {
+            background: #44bb88;
+            border-color: #66ddaa;
+            box-shadow: 0 0 40px rgba(68, 187, 136, 0.3);
+        }
+
+        /* ===== SECCIONES ===== */
+        .section-title {
+            font-size: 2.4em;
+            font-weight: 700;
+            margin: 55px 0 25px 0;
+            color: #ffffff;
+            border-left: 6px solid #ff6b00;
+            padding-left: 20px;
+        }
+
+        .section-title-wrap {
+            text-align: center;
+        }
+        .section-title-wrap .section-title {
+            display: inline-block;
+            border-left: none;
+            border-bottom: 3px solid #ff6b00;
+            padding-bottom: 12px;
+            padding-left: 0;
+        }
+
+        /* ===== DESCRIPCIÓN ===== */
+        .desc-box {
+            background: #141010;
+            padding: 35px 40px;
+            border-radius: 24px;
+            border: 1px solid #2a1a1a;
+            margin-bottom: 30px;
+        }
+
+        .desc-box p {
+            font-size: 1.08rem;
+            color: #d0c0c0;
+            margin-bottom: 16px;
+            line-height: 1.8;
+        }
+
+        .desc-box ul {
+            list-style: none;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            padding: 0;
+            margin-top: 15px;
+        }
+
+        .desc-box ul li {
+            background: #1a1010;
+            padding: 12px 18px;
+            border-radius: 12px;
+            border-left: 3px solid #ff6b00;
+            color: #e8d0d0;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: 0.2s;
+        }
+
+        .desc-box ul li:hover {
+            background: #221818;
+            border-color: #ff8833;
+        }
+
+        @media (max-width: 700px) {
+            .desc-box ul {
+                grid-template-columns: 1fr;
+            }
+            .desc-box {
+                padding: 25px 20px;
+            }
+        }
+
+        /* ===== BENEFICIOS ===== */
+        .benefits-box {
+            background: linear-gradient(145deg, #1a0e0e, #0d0808);
+            border: 1px solid #ff6b00;
+            border-radius: 16px;
+            padding: 25px 30px;
+            margin: 25px 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 20px;
+            justify-content: center;
+        }
+
+        .benefits-box span {
+            background: rgba(255, 107, 0, 0.08);
+            padding: 6px 18px;
+            border-radius: 30px;
+            color: #eec0a0;
+            font-size: 0.95rem;
+            border: 1px solid rgba(255, 107, 0, 0.15);
+        }
+
+        .benefits-box span strong {
+            color: #ffaa44;
+        }
+
+        /* ===== GRID DE FUNCIONES ===== */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+            margin: 35px 0 20px;
+        }
+
+        .feature-card {
+            background: #141010;
+            padding: 28px 18px 22px;
+            border-radius: 20px;
+            border: 1px solid #2a1a1a;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            border-color: #ff6b00;
+            box-shadow: 0 12px 30px rgba(255, 107, 0, 0.05);
+        }
+
+        .feature-card .icon {
+            font-size: 3em;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .feature-card h3 {
+            color: #ff6b00;
+            font-size: 1.25em;
+            margin-bottom: 8px;
+        }
+
+        .feature-card p {
+            color: #b0a0a0;
+            font-size: 0.92rem;
+            line-height: 1.5;
+        }
+
+        /* ===== DESCARGA ===== */
+        .download-box {
+            background: linear-gradient(145deg, #1a0e0e, #0d0808);
+            padding: 45px 30px;
+            border-radius: 30px;
+            border: 2px solid #ff6b00;
+            text-align: center;
+            margin: 45px 0;
+        }
+
+        .download-box h2 {
+            color: #ffffff;
+            font-size: 2.2em;
+            margin-bottom: 8px;
+        }
+
+        .download-box p {
+            color: #b0a0a0;
+            max-width: 600px;
+            margin: 0 auto 20px;
+            font-size: 1.1rem;
+        }
+
+        .download-box a {
+            display: inline-block;
+            background: #ff6b00;
+            color: #fff;
+            padding: 18px 55px;
+            border-radius: 60px;
+            font-weight: 800;
+            text-decoration: none;
+            font-size: 1.3rem;
+            transition: 0.3s;
+            border: 1px solid #ff8833;
+        }
+
+        .download-box a:hover {
+            background: #ff8833;
+            transform: scale(1.05);
+            box-shadow: 0 0 40px rgba(255, 107, 0, 0.3);
+        }
+
+        /* ===== CITA ===== */
+        .quote-box {
+            margin: 45px 0 30px;
+            padding: 28px 35px;
+            background: #141010;
+            border-radius: 20px;
+            border-left: 6px solid #ff6b00;
+        }
+
+        .quote-box p {
+            font-size: 1.2rem;
+            font-style: italic;
+            color: #d0c0c0;
+        }
+
+        .quote-box .author {
+            text-align: right;
+            color: #ffaa44;
+            font-weight: 700;
+            font-style: normal;
+            margin-top: 10px;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            margin-top: 60px;
+            padding: 35px 20px 25px;
+            text-align: center;
+            border-top: 1px solid #2a1a1a;
+            color: #665555;
+        }
+
+        footer a {
+            color: #ff6b00;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.8em;
+            }
+            .hero .subtitle {
+                font-size: 1.1em;
+            }
+            .section-title {
+                font-size: 1.9em;
+            }
+            .features-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            .hero h1 {
+                font-size: 2.4em;
+            }
+            .download-box h2 {
+                font-size: 1.6em;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ====== HERO CON ANIMACIÓN ====== -->
+    <section class="hero">
+        <canvas id="hwCanvas"></canvas>
+        <div class="hero-content container">
+            <h1>🚗 HW Scanner</h1>
+            <p class="subtitle">Descubre el valor real de tus Hot Wheels</p>
+            <div class="tagline">📸 Foto → 💰 Valor real en segundos</div>
+            <br />
+            <button class="scan-btn" id="scanBtn">🔍 Escanear ahora</button>
+        </div>
+    </section>
+
+    <div class="container">
+
+        <!-- ====== ¿QUÉ HACE ESTA APP? ====== -->
+        <h2 class="section-title">🔍 ¿Qué hace esta app?</h2>
+        <div class="desc-box">
+            <p>
+                <strong>HW Scanner</strong> te permite escanear cualquier Hot Wheels con la cámara de tu móvil y obtener su <strong>precio mínimo real de mercado</strong> en segundos.
+            </p>
+            <ul>
+                <li>📸 Escanea cualquier Hot Wheels con la cámara</li>
+                <li>🤖 Detecta el modelo automáticamente</li>
+                <li>💰 Muestra el precio mínimo real de mercado</li>
+                <li>📊 Te da una estimación basada en ventas reales</li>
+                <li>🧩 Ideal para comprar, vender o coleccionar</li>
+            </ul>
+        </div>
+
+        <!-- ====== PERFECTA PARA ====== -->
+        <div class="benefits-box">
+            <span><strong>✅</strong> Coleccionistas</span>
+            <span><strong>✅</strong> Compradores en tiendas o mercadillos</span>
+            <span><strong>✅</strong> Vendedores online</span>
+            <span><strong>✅</strong> Personas que quieren saber si tienen una pieza valiosa</span>
+        </div>
+
+        <!-- ====== FUNCIONES PRINCIPALES ====== -->
+        <div class="section-title-wrap">
+            <h2 class="section-title">⚡ Funciones principales</h2>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <span class="icon">📸</span>
+                <h3>Escaneo rápido</h3>
+                <p>Usa la cámara para escanear el coche al instante.</p>
+            </div>
+            <div class="feature-card">
+                <span class="icon">⏱️</span>
+                <h3>Resultados en segundos</h3>
+                <p>Obtén el valor estimado de forma casi inmediata.</p>
+            </div>
+            <div class="feature-card">
+                <span class="icon">💰</span>
+                <h3>Estimación de precio</h3>
+                <p>Te da el precio mínimo y medio basado en ventas reales.</p>
+            </div>
+            <div class="feature-card">
+                <span class="icon">🧩</span>
+                <h3>Interfaz simple</h3>
+                <p>Diseño intuitivo y fácil de usar para todos.</p>
+            </div>
+        </div>
+
+        <!-- ====== ¿POR QUÉ USARLA? ====== -->
+        <h2 class="section-title">💰 ¿Por qué usarla?</h2>
+        <div class="desc-box">
+            <p>
+                Muchos Hot Wheels parecen iguales… pero algunos pueden valer <strong>mucho más de lo que imaginas</strong>.
+            </p>
+            <p>Con esta app evitarás:</p>
+            <ul style="grid-template-columns: 1fr 1fr 1fr;">
+                <li style="border-left-color: #ff3344;">❌ Pagar de más</li>
+                <li style="border-left-color: #ffaa44;">❌ Vender barato</li>
+                <li style="border-left-color: #44aaff;">❌ Perder oportunidades</li>
+            </ul>
+            <p style="margin-top: 16px;">
+                <strong>Descubre el valor real de tu colección y convierte cada coche en una oportunidad.</strong>
+            </p>
+        </div>
+
+        <!-- ====== DESCARGA ====== -->
+        <div class="download-box">
+            <h2>🚀 Empieza ahora</h2>
+            <p>Descubre el valor real de tu colección y convierte cada coche en una oportunidad.</p>
+            <a href="https://play.google.com/store/apps/details?id=vargas.maximo.hotwheelsscanner" target="_blank">📲 Ir a Google Play</a>
+        </div>
+
+        <!-- ====== CITA ====== -->
+        <div class="quote-box">
+            <p>
+                "Cada Hot Wheels tiene una historia, y ahora también un precio. HW Scanner te ayuda a conocer su verdadero valor."
+            </p>
+            <p class="author">— MaxStudio Team</p>
+        </div>
+
+    </div>
+
+    <!-- ====== FOOTER ====== -->
+    <footer>
+        <div class="container">
+            <p>© 2026 <strong style="color: #ff6b00;">HW Scanner</strong> · Hot Wheels Value Scanner</p>
+            <p style="margin-top: 8px; font-size: 0.9rem;">
+                Hecho con ❤️ por <a href="https://MaxStudiotoken.github.io/maxstudio/">MaxStudio</a>
+            </p>
+        </div>
+    </footer>
+
+    <!-- ============================================================ -->
+    <!-- ====== JAVASCRIPT: ANIMACIÓN DE ESCANEO Y PRECIOS ====== -->
+    <!-- ============================================================ -->
+    <script>
+        (function() {
+            const canvas = document.getElementById('hwCanvas');
+            const ctx = canvas.getContext('2d');
+            let W, H;
+            let scanActive = false;
+            let scanProgress = 0; // 0 a 1
+            let particles = [];
+            let frameId = null;
+            let priceRevealed = false;
+
+            // Precios falsos para simular detección
+            const fakePrices = ['€2.50', '€5.00', '€8.75', '€12.00', '€18.50', '€25.00', '€35.00', '€50.00', '€75.00', '€100.00', '€150.00', '€250.00'];
+            let currentPrice = '';
+
+            function resize() {
+                const rect = canvas.parentElement.getBoundingClientRect();
+                canvas.width = rect.width;
+                canvas.height = rect.height;
+                W = canvas.width;
+                H = canvas.height;
+            }
+
+            // Dibujar coche (silueta estilizada)
+            function drawCar(x, y, scale) {
+                ctx.save();
+                ctx.translate(x, y);
+                ctx.scale(scale, scale);
+                // Cuerpo del coche
+                ctx.beginPath();
+                ctx.moveTo(-80, 0);
+                ctx.quadraticCurveTo(-80, -30, -30, -35);
+                ctx.lineTo(20, -35);
+                ctx.quadraticCurveTo(50, -35, 60, -20);
+                ctx.lineTo(80, -10);
+                ctx.lineTo(80, 0);
+                ctx.lineTo(60, 5);
+                ctx.lineTo(60, 15);
+                ctx.lineTo(-60, 15);
+                ctx.lineTo(-60, 5);
+                ctx.closePath();
+                ctx.fillStyle = '#ff6b00';
+                ctx.shadowColor = 'rgba(255, 107, 0, 0.3)';
+                ctx.shadowBlur = 20;
+                ctx.fill();
+                ctx.shadowBlur = 0;
+                ctx.strokeStyle = '#ff8833';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                // Ventanas
+                ctx.fillStyle = '#88ccff';
+                ctx.shadowBlur = 0;
+                ctx.beginPath();
+                ctx.moveTo(-10, -32);
+                ctx.lineTo(10, -32);
+                ctx.lineTo(20, -22);
+                ctx.lineTo(20, -15);
+                ctx.lineTo(-10, -15);
+                ctx.closePath();
+                ctx.fill();
+                ctx.strokeStyle = '#446688';
+                ctx.lineWidth = 1;
+                ctx.stroke();
+
+                // Ruedas
+                ctx.fillStyle = '#222';
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = 'rgba(0,0,0,0.3)';
+                ctx.beginPath();
+                ctx.ellipse(-50, 15, 15, 8, 0, 0, Math.PI*2);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.ellipse(50, 15, 15, 8, 0, 0, Math.PI*2);
+                ctx.fill();
+                ctx.restore();
+            }
+
+            // Dibujar lupa
+            function drawMagnifier(x, y, angle, scale) {
+                ctx.save();
+                ctx.translate(x, y);
+                ctx.rotate(angle);
+                ctx.scale(scale, scale);
+                // Mango
+                ctx.beginPath();
+                ctx.moveTo(20, 20);
+                ctx.lineTo(50, 50);
+                ctx.strokeStyle = '#cc8844';
+                ctx.lineWidth = 6;
+                ctx.lineCap = 'round';
+                ctx.stroke();
+                // Aro
+                ctx.beginPath();
+                ctx.arc(0, 0, 30, 0, Math.PI*2);
+                ctx.strokeStyle = '#ffaa44';
+                ctx.lineWidth = 4;
+                ctx.stroke();
+                // Cristal
+                ctx.beginPath();
+                ctx.arc(0, 0, 25, 0, Math.PI*2);
+                ctx.fillStyle = 'rgba(255, 255, 200, 0.15)';
+                ctx.fill();
+                ctx.strokeStyle = 'rgba(255, 255, 200, 0.3)';
+                ctx.lineWidth = 1;
+                ctx.stroke();
+                // Reflejo
+                ctx.beginPath();
+                ctx.arc(-8, -8, 8, 0, Math.PI*2);
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+                ctx.fill();
+                ctx.restore();
+            }
+
+            // Partículas de dinero
+            function createParticles(count) {
+                for (let i = 0; i < count; i++) {
+                    particles.push({
+                        x: W/2 + (Math.random()-0.5)*400,
+                        y: H/2 + (Math.random()-0.5)*200,
+                        vx: (Math.random()-0.5)*4,
+                        vy: -2 - Math.random()*4,
+                        life: 1,
+                        text: fakePrices[Math.floor(Math.random()*fakePrices.length)],
+                        size: 14 + Math.random()*10,
+                    });
+                }
+            }
+
+            function updateParticles() {
+                for (let i = particles.length-1; i >= 0; i--) {
+                    const p = particles[i];
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.vy += 0.05;
+                    p.life -= 0.008;
+                    if (p.life <= 0 || p.y > H + 50) {
+                        particles.splice(i, 1);
+                    }
+                }
+                // Mantener número de partículas
+                if (particles.length < 30 && scanActive) {
+                    createParticles(2);
+                }
+            }
+
+            function drawParticles() {
+                particles.forEach(p => {
+                    ctx.save();
+                    ctx.globalAlpha = p.life * 0.9;
+                    ctx.font = `bold ${p.size}px Inter, Arial`;
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillStyle = '#ffdd44';
+                    ctx.shadowColor = 'rgba(255, 220, 68, 0.5)';
+                    ctx.shadowBlur = 15;
+                    ctx.fillText(p.text, p.x, p.y);
+                    ctx.restore();
+                });
+            }
+
+            // Dibujar el escaneo
+            function drawScene() {
+                ctx.clearRect(0, 0, W, H);
+
+                // Fondo sutil con degradado
+                const grad = ctx.createRadialGradient(W/2, H/2, 0, W/2, H/2, Math.max(W,H)*0.8);
+                grad.addColorStop(0, 'rgba(60, 30, 10, 0.2)');
+                grad.addColorStop(1, 'rgba(0,0,0,0)');
+                ctx.fillStyle = grad;
+                ctx.fillRect(0, 0, W, H);
+
+                const cx = W/2, cy = H/2;
+
+                // Dibujar coche
+                const carScale = Math.min(W, H) / 400;
+                drawCar(cx - 30, cy + 10, carScale);
+
+                // Lupa orbitando alrededor del coche
+                const time = Date.now() / 1500;
+                const orbitRadius = Math.min(W, H) * 0.25;
+                const lx = cx + Math.cos(time) * orbitRadius;
+                const ly = cy + Math.sin(time) * orbitRadius;
+                const angle = time + Math.PI/4;
+                drawMagnifier(lx, ly, angle, 1.2);
+
+                // Línea de escaneo (si está activo)
+                if (scanActive) {
+                    // Línea de barrido horizontal
+                    const progress = scanProgress;
+                    const yLine = cy - 80 + progress * 160;
+                    ctx.beginPath();
+                    ctx.moveTo(cx - 150, yLine);
+                    ctx.lineTo(cx + 150, yLine);
+                    ctx.strokeStyle = 'rgba(255, 200, 100, 0.6)';
+                    ctx.lineWidth = 2;
+                    ctx.shadowColor = 'rgba(255, 200, 100, 0.8)';
+                    ctx.shadowBlur = 20;
+                    ctx.stroke();
+                    ctx.shadowBlur = 0;
+
+                    // Destello
+                    const grad2 = ctx.createRadialGradient(cx, yLine, 0, cx, yLine, 80);
+                    grad2.addColorStop(0, 'rgba(255, 200, 100, 0.2)');
+                    grad2.addColorStop(1, 'rgba(255, 200, 100, 0)');
+                    ctx.fillStyle = grad2;
+                    ctx.fillRect(cx - 80, yLine - 80, 160, 160);
+
+                    // Texto de escaneo
+                    ctx.font = 'bold 20px Inter, Arial';
+                    ctx.fillStyle = '#ffcc66';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'bottom';
+                    ctx.shadowColor = 'rgba(255, 200, 100, 0.5)';
+                    ctx.shadowBlur = 15;
+                    ctx.fillText('🔍 ESCANEANDO...', cx, yLine - 20);
+                    ctx.shadowBlur = 0;
+
+                    // Actualizar progreso
+                    scanProgress += 0.015;
+                    if (scanProgress >= 1) {
+                        scanProgress = 0;
+                        // Revelar precio
+                        if (!priceRevealed) {
+                            priceRevealed = true;
+                            currentPrice = fakePrices[Math.floor(Math.random() * fakePrices.length)];
+                            createParticles(25);
+                        }
+                    }
+                } else {
+                    // Mostrar precio si está revelado
+                    if (priceRevealed && currentPrice) {
+                        ctx.font = 'bold 48px Inter, Arial';
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+                        ctx.shadowColor = 'rgba(255, 220, 68, 0.6)';
+                        ctx.shadowBlur = 30;
+                        ctx.fillStyle = '#ffdd44';
+                        ctx.fillText(`💰 ${currentPrice}`, cx, cy - 120);
+                        ctx.shadowBlur = 0;
+                        ctx.font = '20px Inter, Arial';
+                        ctx.fillStyle = '#eec0a0';
+                        ctx.fillText('Valor estimado', cx, cy - 170);
+                    } else {
+                        // Texto inicial
+                        ctx.font = '20px Inter, Arial';
+                        ctx.fillStyle = 'rgba(255, 200, 150, 0.5)';
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+                        ctx.fillText('📸 Escanea para descubrir el precio', cx, cy - 130);
+                    }
+                }
+
+                // Dibujar partículas
+                drawParticles();
+
+                // Actualizar partículas si está activo
+                if (scanActive) {
+                    updateParticles();
+                }
+
+                // Continuar animación
+                frameId = requestAnimationFrame(drawScene);
+            }
+
+            // ====== INICIAR / DETENER ESCANEO ======
+            function toggleScan() {
+                scanActive = !scanActive;
+                const btn = document.getElementById('scanBtn');
+                if (scanActive) {
+                    btn.textContent = '⏹️ Detener escaneo';
+                    btn.classList.add('scanning');
+                    priceRevealed = false;
+                    currentPrice = '';
+                    scanProgress = 0;
+                    particles = [];
+                    // Añadir algunas partículas iniciales
+                    createParticles(10);
+                } else {
+                    btn.textContent = '🔍 Escanear ahora';
+                    btn.classList.remove('scanning');
+                    // Mantener el precio mostrado
+                }
+            }
+
+            // ====== INICIALIZAR ======
+            function init() {
+                resize();
+                drawScene();
+                window.addEventListener('resize', () => {
+                    resize();
+                });
+                document.getElementById('scanBtn').addEventListener('click', toggleScan);
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init);
+            } else {
+                init();
+            }
+        })();
+    </script>
+</body>
+</html>
